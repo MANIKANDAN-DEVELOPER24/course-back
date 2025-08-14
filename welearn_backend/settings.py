@@ -3,7 +3,6 @@ from pathlib import Path
 from datetime import timedelta
 import dj_database_url
 import mimetypes
-from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
