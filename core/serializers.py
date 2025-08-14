@@ -5,17 +5,32 @@ from django.conf import settings
 from .models import User, Course, Offer, Purchase
 
 # Automatically convert ALL ImageFields to absolute URLs
+# class AbsoluteURLModelSerializer(serializers.ModelSerializer):
+#     def to_representation(self, instance):
+#         data = super().to_representation(instance)
+#         request = self.context.get('request')
+#         for field_name, field_value in data.items():
+#             model_field = self.Meta.model._meta.get_field(field_name) if field_name in self.Meta.model._meta.fields_map else None
+#             if model_field and model_field.get_internal_type() == "ImageField" and field_value:
+#                 if request:
+#                     data[field_name] = request.build_absolute_uri(field_value)
+#                 else:
+#                     data[field_name] = f"{settings.BACKEND_BASE_URL}{field_value}"
+#         return data
+from django.db.models import ImageField
+
 class AbsoluteURLModelSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         request = self.context.get('request')
-        for field_name, field_value in data.items():
-            model_field = self.Meta.model._meta.get_field(field_name) if field_name in self.Meta.model._meta.fields_map else None
-            if model_field and model_field.get_internal_type() == "ImageField" and field_value:
-                if request:
-                    data[field_name] = request.build_absolute_uri(field_value)
-                else:
-                    data[field_name] = f"{settings.BACKEND_BASE_URL}{field_value}"
+        for field in self.Meta.model._meta.get_fields():
+            if isinstance(field, ImageField):
+                field_name = field.name
+                if field_name in data and data[field_name]:
+                    if request:
+                        data[field_name] = request.build_absolute_uri(data[field_name])
+                    else:
+                        data[field_name] = f"{settings.BACKEND_BASE_URL}{data[field_name]}"
         return data
 
 
