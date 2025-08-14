@@ -119,12 +119,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://manikandan-developer24.github.io",
-    "https://course-back-ofpi.onrender.com"  # allow media load
+    "https://course-back-ofpi.onrender.com" , # allow media load
+    "https://courseappreact.netlify.app",  # ← Netlify frontend
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://manikandan-developer24.github.io",
-    "https://course-back-ofpi.onrender.com"
+    "https://course-back-ofpi.onrender.com",
+    "https://courseappreact.netlify.app",  # ← Netlify frontend
 ]
 
 CORS_ALLOW_HEADERS = [
