@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "course-back-ofpi.onrender.com",  # Correct Render backend domain
+    "course-back-ofpi.onrender.com",  # Render backend domain
     "localhost",
     "127.0.0.1"
 ]
@@ -95,6 +95,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Base URL for generating absolute media links (Option 1)
+BACKEND_BASE_URL = "https://course-back-ofpi.onrender.com"
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
@@ -107,13 +110,13 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://manikandan-developer24.github.io",
-    "https://course-back-ofpi.onrender.com"  # Correct backend domain
+    "https://course-back-ofpi.onrender.com"
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = True  # Secure for production
+SESSION_COOKIE_SECURE = True  # Production
 
 # REST Framework + JWT
 REST_FRAMEWORK = {

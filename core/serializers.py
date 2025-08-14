@@ -1,12 +1,29 @@
 # core/serializers.py
 from rest_framework import serializers
-from .models import User, Course, Offer, Purchase
 from django.contrib.auth import authenticate
+from django.conf import settings
+from .models import User, Course, Offer, Purchase
 
-class UserSerializer(serializers.ModelSerializer):
+# Automatically convert ALL ImageFields to absolute URLs
+class AbsoluteURLModelSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request')
+        for field_name, field_value in data.items():
+            model_field = self.Meta.model._meta.get_field(field_name) if field_name in self.Meta.model._meta.fields_map else None
+            if model_field and model_field.get_internal_type() == "ImageField" and field_value:
+                if request:
+                    data[field_name] = request.build_absolute_uri(field_value)
+                else:
+                    data[field_name] = f"{settings.BACKEND_BASE_URL}{field_value}"
+        return data
+
+
+class UserSerializer(AbsoluteURLModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'role']
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +38,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -31,19 +49,23 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid credentials")
         return user
 
-class CourseSerializer(serializers.ModelSerializer):
+
+class CourseSerializer(AbsoluteURLModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
-        
-class OfferSerializer(serializers.ModelSerializer):
+
+
+class OfferSerializer(AbsoluteURLModelSerializer):
     class Meta:
         model = Offer
         fields = '__all__'
 
+
 class PurchaseSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     course = CourseSerializer(read_only=True)
+
     class Meta:
         model = Purchase
         fields = ['id', 'user', 'course', 'purchased_at']
