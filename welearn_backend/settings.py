@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "welearn-backend.onrender.com",  # Replace with your actual Render backend URL
+    "course-back-ofpi.onrender.com",  # Correct Render backend domain
     "localhost",
     "127.0.0.1"
 ]
@@ -66,7 +66,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'welearn_backend.wsgi.application'
 
-# Database (uses Render's DATABASE_URL env variable)
+# Database (Render's DATABASE_URL from env)
 DATABASES = {
     'default': dj_database_url.config(
         conn_max_age=600,
@@ -86,7 +86,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files for Render
+# Static files (Render)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -107,13 +107,13 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://manikandan-developer24.github.io",
-    "https://welearn-backend.onrender.com"  # Add your backend Render URL here
+    "https://course-back-ofpi.onrender.com"  # Correct backend domain
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = True  # Important for production
+SESSION_COOKIE_SECURE = True  # Secure for production
 
 # REST Framework + JWT
 REST_FRAMEWORK = {
