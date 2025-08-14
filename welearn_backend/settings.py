@@ -117,9 +117,18 @@ CSRF_TRUSTED_ORIGINS = [
     "https://course-back-ofpi.onrender.com"
 ]
 
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    "Content-Type",
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
 ]
+
 
 CORS_ALLOW_CREDENTIALS = True
 
