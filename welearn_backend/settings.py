@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import dj_database_url
+import mimetypes
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -95,17 +97,20 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Base URL for generating absolute media links (Option 1)
+# Backend domain for absolute media URLs
 BACKEND_BASE_URL = "https://course-back-ofpi.onrender.com"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
-# CORS
+# --------------------
+# CORS & CSRF settings
+# --------------------
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://manikandan-developer24.github.io"
+    "https://manikandan-developer24.github.io",
+    "https://course-back-ofpi.onrender.com"  # allow media load
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -113,12 +118,25 @@ CSRF_TRUSTED_ORIGINS = [
     "https://course-back-ofpi.onrender.com"
 ]
 
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "Content-Type",
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = True  # Production
 
+# --------------------
+# Fix ORB blocking (image MIME types)
+# --------------------
+mimetypes.add_type("image/png", ".png", True)
+mimetypes.add_type("image/jpeg", ".jpg", True)
+mimetypes.add_type("image/jpeg", ".jpeg", True)
+
+# --------------------
 # REST Framework + JWT
+# --------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
