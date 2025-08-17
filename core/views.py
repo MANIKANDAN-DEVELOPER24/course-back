@@ -86,12 +86,12 @@ class CourseListCreateView(generics.ListCreateAPIView):
 class CourseListView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    permission_classes = [AllowAny]   # 👈 anyone can access
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context.update({"request": self.request})  # 👈 important
+        context.update({"request": self.request})
         return context
-
 
 # -------- OFFERS --------
 class OfferListCreateView(generics.ListCreateAPIView):
