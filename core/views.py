@@ -12,7 +12,9 @@ from .serializers import (
     CourseSerializer, OfferSerializer, PurchaseSerializer
 )
 from django.views.decorators.csrf import csrf_exempt
-
+from rest_framework import  permissions
+from rest_framework.permissions import BasePermission
+from django.shortcuts import get_object_or_404
 # -------- AUTH --------
 @method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.CreateAPIView):
@@ -78,11 +80,6 @@ class CourseListCreateView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]  # Public
 
 
-# class CourseListView(generics.ListAPIView):
-#     queryset = Course.objects.all().order_by('-id')
-#     serializer_class = CourseSerializer
-#     permission_classes = [AllowAny]  # Public
-
 class CourseListView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -128,3 +125,58 @@ def checkout(request):
             return Response({'error': f'Course {course_id} not found'}, status=status.HTTP_404_NOT_FOUND)
 
     return Response({'message': 'Purchase successful'}, status=status.HTTP_200_OK)
+
+
+
+
+
+# Only admins can edit/delete
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == "admin"
+
+
+# List + Create
+class CourseListCreateView(generics.ListCreateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [IsAdminUser()]
+        return [permissions.AllowAny()]
+
+
+# Update
+class CourseUpdateView(generics.UpdateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsAdminUser]
+
+    def put(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        serializer = CourseSerializer(course, data=request.data, partial=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        serializer = CourseSerializer(course, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Delete
+class CourseDeleteView(generics.DestroyAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsAdminUser]
+
+    def delete(self, request, pk):
+        course = get_object_or_404(Course, pk=pk)
+        course.delete()
+        return Response({"message": "Course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
