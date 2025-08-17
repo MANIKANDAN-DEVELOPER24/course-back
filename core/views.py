@@ -133,8 +133,7 @@ def checkout(request):
 # Only admins can edit/delete
 class IsAdminUser(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == "admin"
-
+        return request.user.is_authenticated and request.user.is_superuser
 
 # List + Create
 class CourseListCreateView(generics.ListCreateAPIView):
