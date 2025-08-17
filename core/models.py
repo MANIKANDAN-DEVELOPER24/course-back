@@ -1,6 +1,7 @@
 # core/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from cloudinary.models import CloudinaryField
 
 class User(AbstractUser):
     ROLE_CHOICES = (('admin', 'Admin'), ('user', 'User'))
@@ -8,6 +9,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    
 class Course(models.Model):
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -15,11 +18,10 @@ class Course(models.Model):
     duration = models.CharField(max_length=50)
     ratings = models.DecimalField(max_digits=3, decimal_places=1)
     description = models.TextField()
-    image = models.ImageField(upload_to='course_images/', null=True, blank=True)  # image field
+    image = CloudinaryField('image', null=True, blank=True)  # ✅ Store in Cloudinary
 
     def __str__(self):
         return self.name
-
 class Offer(models.Model):
     title = models.CharField(max_length=200)
     discount = models.CharField(max_length=50)
