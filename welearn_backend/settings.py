@@ -102,9 +102,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Media files
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = '/media/'
 
-MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 # Backend domain for absolute media URLs
 BACKEND_BASE_URL = "https://course-back-ofpi.onrender.com"
