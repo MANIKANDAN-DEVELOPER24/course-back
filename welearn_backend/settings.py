@@ -6,6 +6,10 @@ import mimetypes
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+
+import os
+print("Cloudinary debug ->", os.getenv("CLOUDINARY_CLOUD_NAME"))
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
