@@ -65,11 +65,17 @@ class LoginSerializer(serializers.Serializer):
         return user
 
 
-class CourseSerializer(AbsoluteURLModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Course
         fields = '__all__'
 
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url  # ✅ Full Cloudinary URL
+        return None
 
 class OfferSerializer(AbsoluteURLModelSerializer):
     class Meta:
