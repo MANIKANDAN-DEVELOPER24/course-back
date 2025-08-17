@@ -3,7 +3,9 @@ from pathlib import Path
 from datetime import timedelta
 import dj_database_url
 import mimetypes
-
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
