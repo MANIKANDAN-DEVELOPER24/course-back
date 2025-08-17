@@ -179,3 +179,17 @@ class CourseDeleteView(generics.DestroyAPIView):
         course = get_object_or_404(Course, pk=pk)
         course.delete()
         return Response({"message": "Course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    
+
+
+from rest_framework.generics import RetrieveAPIView
+from core.models import Course
+from core.serializers import CourseSerializer
+
+class CourseDetailView(RetrieveAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    def get_serializer_context(self):
+         context = super().get_serializer_context()
+         context.update({"request": self.request})
+         return context

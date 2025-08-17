@@ -51,6 +51,8 @@
 # # ✅ Always serve media in local AND production (for Render)
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+
+
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
@@ -89,6 +91,8 @@ urlpatterns = [
     path('api/courses/<int:pk>/update/', CourseUpdateView.as_view(), name='course-update'),
     path('api/courses/<int:pk>/delete/', CourseDeleteView.as_view(), name='course-delete'),
     path('api/all-courses/', views.CourseListView.as_view(), name='all_courses'),
+    path('api/courses/<int:pk>/', views.CourseDetailView.as_view(), name='course-detail'),
+
 
     # Offers
     path('api/offers/', views.OfferListCreateView.as_view(), name='offer_list'),
