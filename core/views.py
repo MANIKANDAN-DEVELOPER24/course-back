@@ -189,7 +189,7 @@ from core.serializers import CourseSerializer
 class CourseDetailView(RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [AllowAny] 
+    # permission_classes = [AllowAny] 
     def get_serializer_context(self):
          context = super().get_serializer_context()
          context.update({"request": self.request})
