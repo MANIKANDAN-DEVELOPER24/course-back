@@ -15,6 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import  permissions
 from rest_framework.permissions import BasePermission
 from django.shortcuts import get_object_or_404
+
+
 # -------- AUTH --------
 @method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.CreateAPIView):

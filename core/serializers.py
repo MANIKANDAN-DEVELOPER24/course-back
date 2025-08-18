@@ -4,19 +4,6 @@ from django.contrib.auth import authenticate
 from django.conf import settings
 from .models import User, Course, Offer, Purchase
 
-# Automatically convert ALL ImageFields to absolute URLs
-# class AbsoluteURLModelSerializer(serializers.ModelSerializer):
-#     def to_representation(self, instance):
-#         data = super().to_representation(instance)
-#         request = self.context.get('request')
-#         for field_name, field_value in data.items():
-#             model_field = self.Meta.model._meta.get_field(field_name) if field_name in self.Meta.model._meta.fields_map else None
-#             if model_field and model_field.get_internal_type() == "ImageField" and field_value:
-#                 if request:
-#                     data[field_name] = request.build_absolute_uri(field_value)
-#                 else:
-#                     data[field_name] = f"{settings.BACKEND_BASE_URL}{field_value}"
-#         return data
 from django.db.models import ImageField
 
 class AbsoluteURLModelSerializer(serializers.ModelSerializer):
@@ -64,18 +51,6 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid credentials")
         return user
 
-
-# class CourseSerializer(serializers.ModelSerializer):
-#     image = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = Course
-#         fields = '__all__'
-
-#     def get_image(self, obj):
-#         if obj.image:
-#             return obj.image.url  # ✅ Full Cloudinary URL
-#         return None
 
 class CourseSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False, allow_null=True)
