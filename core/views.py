@@ -117,7 +117,7 @@ class PurchaseListView(generics.ListAPIView):
 def checkout(request):
     course_ids = request.data.get('course_ids', [])
     if not course_ids:
-        return Response({'error': 'No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': '❌ No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
 
     for course_id in course_ids:
         try:
@@ -126,7 +126,7 @@ def checkout(request):
         except Course.DoesNotExist:
             return Response({'error': f'Course {course_id} not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    return Response({'message': 'Purchase successful'}, status=status.HTTP_200_OK)
+    return Response({'message': '✅ Purchase successful!'}, status=status.HTTP_200_OK)
 
 
 
