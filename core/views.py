@@ -110,21 +110,21 @@ class PurchaseListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]  # Private
 
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])  # Private
-# def checkout(request):
-#     course_ids = request.data.get('course_ids', [])
-#     if not course_ids:
-#         return Response({'error': 'No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Private
+def checkout(request):
+    course_ids = request.data.get('course_ids', [])
+    if not course_ids:
+        return Response({'error': 'No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-#     for course_id in course_ids:
-#         try:
-#             course = Course.objects.get(id=course_id)
-#             Purchase.objects.create(user=request.user, course=course)
-#         except Course.DoesNotExist:
-#             return Response({'error': f'Course {course_id} not found'}, status=status.HTTP_404_NOT_FOUND)
+    for course_id in course_ids:
+        try:
+            course = Course.objects.get(id=course_id)
+            Purchase.objects.create(user=request.user, course=course)
+        except Course.DoesNotExist:
+            return Response({'error': f'Course {course_id} not found'}, status=status.HTTP_404_NOT_FOUND)
 
-#     return Response({'message': 'Purchase successful'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Purchase successful'}, status=status.HTTP_200_OK)
 
 
 
@@ -198,55 +198,55 @@ class CourseDetailView(RetrieveAPIView):
 
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Private
-def checkout_preview(request):
-    course_ids = request.data.get('course_ids', [])
-    if not course_ids:
-        return Response({'error': 'No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])  # Private
+# def checkout_preview(request):
+#     course_ids = request.data.get('course_ids', [])
+#     if not course_ids:
+#         return Response({'error': 'No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-    courses = Course.objects.filter(id__in=course_ids)
+#     courses = Course.objects.filter(id__in=course_ids)
 
-    if not courses.exists():
-        return Response({'error': 'No valid courses found'}, status=status.HTTP_404_NOT_FOUND)
+#     if not courses.exists():
+#         return Response({'error': 'No valid courses found'}, status=status.HTTP_404_NOT_FOUND)
 
-    total_price = sum(course.price for course in courses)
-    discount = round(total_price * 0.1, 2)  # example 10% discount
-    gst = round((total_price - discount) * 0.18, 2)  # 18% GST
-    final_amount = total_price - discount + gst
+#     total_price = sum(course.price for course in courses)
+#     discount = round(total_price * 0.1, 2)  # example 10% discount
+#     gst = round((total_price - discount) * 0.18, 2)  # 18% GST
+#     final_amount = total_price - discount + gst
 
-    summary = {
-        "courses": [
-            {"id": c.id, "name": c.name, "price": c.price}
-            for c in courses
-        ],
-        "total_price": total_price,
-        "discount": discount,
-        "gst": gst,
-        "final_amount": final_amount,
-    }
+#     summary = {
+#         "courses": [
+#             {"id": c.id, "name": c.name, "price": c.price}
+#             for c in courses
+#         ],
+#         "total_price": total_price,
+#         "discount": discount,
+#         "gst": gst,
+#         "final_amount": final_amount,
+#     }
 
-    return Response(summary, status=status.HTTP_200_OK)
+#     return Response(summary, status=status.HTTP_200_OK)
 
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])  # Private
-def checkout_confirm(request):
-    course_ids = request.data.get('course_ids', [])
-    if not course_ids:
-        return Response({'error': 'No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])  # Private
+# def checkout_confirm(request):
+#     course_ids = request.data.get('course_ids', [])
+#     if not course_ids:
+#         return Response({'error': 'No courses provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-    purchases = []
-    for course_id in course_ids:
-        try:
-            course = Course.objects.get(id=course_id)
-            purchase = Purchase.objects.create(user=request.user, course=course)
-            purchases.append({"id": course.id, "name": course.name, "price": course.price})
-        except Course.DoesNotExist:
-            return Response({'error': f'Course {course_id} not found'}, status=status.HTTP_404_NOT_FOUND)
+#     purchases = []
+#     for course_id in course_ids:
+#         try:
+#             course = Course.objects.get(id=course_id)
+#             purchase = Purchase.objects.create(user=request.user, course=course)
+#             purchases.append({"id": course.id, "name": course.name, "price": course.price})
+#         except Course.DoesNotExist:
+#             return Response({'error': f'Course {course_id} not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    return Response({
-        'message': 'Purchase successful',
-        'purchased_courses': purchases
-    }, status=status.HTTP_200_OK)
+#     return Response({
+#         'message': 'Purchase successful',
+#         'purchased_courses': purchases
+#     }, status=status.HTTP_200_OK)
